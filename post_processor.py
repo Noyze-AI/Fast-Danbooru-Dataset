@@ -56,7 +56,6 @@ class PostProcessor:
         # 硬编码配置项
         self.rename_start_index = 1
         self.create_unpaired_folder = True
-        self.enable_file_log = True
         self.log_level = 'INFO'
         self._lock = threading.Lock()
         self.logger = self._setup_logger()
@@ -84,25 +83,6 @@ class PostProcessor:
             console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             console_handler.setFormatter(console_formatter)
             logger.addHandler(console_handler)
-            
-            # 文件处理器（如果启用）
-            if self.enable_file_log:
-                try:
-                    log_dir = 'logs'
-                    os.makedirs(log_dir, exist_ok=True)
-                    
-                    file_handler = logging.FileHandler(
-                        os.path.join(log_dir, 'post_processor.log'),
-                        encoding='utf-8'
-                    )
-                    file_handler.setLevel(logging.DEBUG)
-                    file_formatter = logging.Formatter(
-                        '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
-                    )
-                    file_handler.setFormatter(file_formatter)
-                    logger.addHandler(file_handler)
-                except Exception as e:
-                    print(f"警告: 无法创建文件日志处理器: {e}")
         
         return logger
     

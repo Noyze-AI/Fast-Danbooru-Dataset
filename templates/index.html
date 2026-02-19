@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastDanbooruDataset</title>
     <style>
+        :root {
+            --primary-color: #ff9a9e;
+            --secondary-color: #4a90e2;
+            --accent-color: #ff6b81;
+            --bg-color: #f0f2f5;
+            --panel-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #ff9a9e;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,358 +24,1182 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        .header {
-            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+        .tool-btn {
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tool-btn.active {
+            background-color: var(--secondary-color);
             color: white;
-            padding: 30px;
-            text-align: center;
+            border-color: var(--secondary-color);
         }
-
-        .header h1 {
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.1em;
+        .tool-btn:hover {
             opacity: 0.9;
         }
 
-        .main-content {
-            padding: 30px;
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            flex: 1;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .input-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 30px;
+        /* Common Panel Styles */
+        .panel {
+            background: var(--panel-bg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
+        .panel-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fcfcfc;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        /* Left Sidebar */
+        .sidebar-left {
+            width: 320px;
+            min-width: 320px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subsection-title {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        /* Form Elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            color: var(--secondary-color);
             font-weight: 600;
-            color: #333;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            background: white;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
         }
 
         .btn {
-            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
-            color: white;
+            width: 100%;
+            padding: 10px;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 10px;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+            opacity: 0.9;
         }
 
         .btn:disabled {
-            background: #ccc;
+            background-color: #ccc;
+            border-color: #ccc;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
+        }
+        
+        /* Button Active State for Blue Background */
+        .btn:active, .btn.running {
+            background-color: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: white !important;
+            transform: translateY(1px);
         }
 
-        .btn-cancel {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        .btn-secondary {
+            background-color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            color: white;
         }
 
-        .btn-cancel:hover {
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+        .btn-secondary:hover {
+            opacity: 0.9;
         }
 
-        .status-section {
+        .btn-danger {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-group {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+        
+        .action-group .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .action-group .btn {
+            width: auto;
+            white-space: nowrap;
+            height: 38px;
+        }
+
+        /* Status Indicators */
+        .status-val {
+            font-weight: 500;
+        }
+        
+        .text-blue { color: var(--secondary-color); }
+        .text-green { color: #27ae60; }
+        .text-red { color: var(--accent-color); }
+
+        /* Center Content */
+        .main-center {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            position: relative;
         }
 
-        .status-item {
+        .preview-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e1e5e9;
+            background: #fcfcfc;
+            min-height: 40px;
         }
-
-        .status-item:last-child {
-            border-bottom: none;
-        }
-
-        .status-label {
+        
+        .section-header span {
+            font-size: 1rem;
             font-weight: 600;
             color: #333;
         }
 
-        .status-value {
-            color: #666;
+        .image-viewer {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            background-color: #eef2f5;
+            background-image: 
+                linear-gradient(45deg, #e4e7eb 25%, transparent 25%), 
+                linear-gradient(-45deg, #e4e7eb 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #e4e7eb 75%), 
+                linear-gradient(-45deg, transparent 75%, #e4e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
 
-        .downloading {
-            color: #4a90e2;
+        .image-viewer img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .tags-editor {
+            height: 200px;
+            min-height: 150px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .tags-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            resize: none;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            outline: none;
+        }
+        
+        .tags-textarea:focus {
+            background: #fefefe;
+            box-shadow: inset 0 0 0 2px var(--secondary-color);
+        }
+
+        /* Right Sidebar */
+        .sidebar-right {
+            width: 280px;
+            min-width: 250px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .file-tree {
+            padding: 10px 0;
+        }
+
+        .tree-item {
+            padding: 6px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #444;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-left: 3px solid transparent;
+        }
+
+        .tree-item:hover {
+            background-color: #fff0f3;
+            color: var(--secondary-color);
+        }
+
+        .tree-item.active {
+            background-color: #fff0f3;
+            color: var(--secondary-color);
             font-weight: 600;
+            border-left: 3px solid var(--primary-color);
         }
 
-        .completed {
-            color: #27ae60;
-            font-weight: 600;
+        .tree-item-icon {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 0.8rem;
         }
-
-        .error {
-            color: #e74c3c;
-            font-weight: 600;
-        }
-
-        .hidden {
+        
+        .tree-children {
+            padding-left: 18px;
             display: none;
         }
-
-        .loading {
+        
+        .tree-children.open {
+            display: block;
+        }
+        
+        .folder-toggle {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4a90e2;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .footer {
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
             text-align: center;
-            padding: 20px;
-            color: #666;
-            border-top: 1px solid #e1e5e9;
+            margin-right: 2px;
+            font-size: 0.7rem;
+            color: var(--primary-color);
+            transition: transform 0.2s;
+        }
+        
+        .folder-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+        }
+        
+        .toast.success { background: #27ae60; }
+        .toast.error { background: #e74c3c; }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bbb; 
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎨 FastDanbooruDataset</h1>
-            <p>一键极速生成 Danbooru 数据集！</p>
-        </div>
-
-        <div class="main-content">
-            <div class="input-section">
-                <div class="form-group">
-                    <label for="tag">🏷️ 标签 (Tag)</label>
-                    <input type="text" id="tag" placeholder="输入要下载的标签，例如: landscape">
+    <div class="app-container">
+        <!-- Left Sidebar: Interaction Area -->
+        <aside class="sidebar-left panel">
+            <div class="panel-header">
+                <span>控制面板</span>
+            </div>
+            <div class="panel-content">
+                <!-- Download Section -->
+                <div class="section-card">
+                    <div class="section-title" style="font-size: 1.15rem; font-weight: 700;">数据集下载</div>
+                    <div class="form-group">
+                        <label for="tag" style="font-size: 1rem; color: #333; font-weight: 600;">Tag (关键词)</label>
+                        <input type="text" id="tag" placeholder="例如: 1girl, black_hair">
+                    </div>
+                    <div class="form-group">
+                        <label for="max_count" style="font-size: 1rem; color: #333; font-weight: 600;">最大数量</label>
+                        <input type="number" id="max_count" value="50" min="1" max="1000">
+                    </div>
+                    <div class="form-group">
+                        <button id="start-btn" class="btn btn-primary">开始下载</button>
+                        <button id="cancel-btn" class="btn btn-danger hidden">取消下载</button>
+                    </div>
+                    <div class="status-indicator">
+                         <span id="status" class="status-val">就绪</span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="download_dir">📁 下载目录</label>
-                    <input type="text" id="download_dir" value="dataset" placeholder="输入下载目录路径">
-                </div>
+                <!-- Post Process Section -->
+                <div class="section-card">
+                    <div class="section-title" style="font-size: 1.15rem; font-weight: 700;">数据集后处理</div>
+                    <div class="form-group">
+                        <label for="process-folder" style="display: block; margin-bottom: 8px; font-size: 1rem; color: #333; font-weight: 600;">目标文件夹</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="process-folder" placeholder="dataset/tag_name">
+                            <button id="refresh-folders-btn" class="btn btn-secondary btn-sm" title="自动填充">🔄</button>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection-title" style="margin-top: 20px; font-size: 1rem; color: #333; font-weight: 600;">基础批量操作</div>
+                    
+                    <div class="btn-group" style="margin-bottom: 15px;">
+                        <button id="rename-files-btn" class="btn btn-secondary btn-sm">文件重命名</button>
+                        <button id="auto-standardize-btn" class="btn btn-secondary btn-sm">Tag标准化</button>
+                    </div>
 
-                <div class="form-group">
-                    <label for="max_count">🔢 最大下载数量</label>
-                    <input type="number" id="max_count" value="50" min="1" max="1000" placeholder="设置最大下载数量">
-                </div>
+                    <div class="subsection-title" style="margin-top: 20px; font-size: 1rem; color: #333; font-weight: 600;">标签批量编辑</div>
 
-                <div class="form-group">
-                    <button id="start-btn" class="btn">🚀 开始下载</button>
-                    <button id="cancel-btn" class="btn btn-cancel hidden">🛑 取消下载</button>
+                    <div class="action-group-container">
+                        <label style="font-size: 0.85rem; color: #555; font-weight: 400; margin-bottom: 3px;">删除指定标签</label>
+                        <div class="action-group">
+                            <div class="form-group">
+                                 <input type="text" id="delete-tags" placeholder="例如: mosaic, text">
+                            </div>
+                            <button id="btn-delete-tags" class="btn btn-secondary btn-sm">执行</button>
+                        </div>
+                    </div>
+
+                    <div class="action-group-container">
+                        <label style="font-size: 0.85rem; color: #555; font-weight: 400; margin-bottom: 3px;">删除模糊标签</label>
+                        <div class="action-group">
+                            <div class="form-group">
+                                 <input type="text" id="delete-containing" placeholder="例如: hair， blue">
+                            </div>
+                            <button id="btn-delete-containing" class="btn btn-secondary btn-sm">执行</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-group-container">
+                        <label style="font-size: 0.85rem; color: #555; font-weight: 400; margin-bottom: 3px;">添加标签</label>
+                        <div class="action-group">
+                            <div class="form-group">
+                                 <input type="text" id="add-tags" placeholder="例如: artist:alice111， loli">
+                            </div>
+                            <button id="btn-add-tags" class="btn btn-secondary btn-sm">执行</button>
+                       </div>
+                   </div>
+
+                   <div class="subsection-title" style="margin-top: 20px; font-size: 1rem; color: #333; font-weight: 600;">图片批量编辑</div>
+
+                   <div class="action-group-container">
+                       <label style="font-size: 0.85rem; color: #555; font-weight: 400; margin-bottom: 3px;">缩放至最大边</label>
+                       <div class="action-group">
+                           <div class="form-group">
+                                <input type="number" id="resize-max-edge" placeholder="例如: 1024" min="1">
+                           </div>
+                           <button id="btn-resize-images" class="btn btn-secondary btn-sm">执行</button>
+                       </div>
+                   </div>
+
+                   <div class="action-group-container">
+                       <label style="font-size: 0.85rem; color: #555; font-weight: 400; margin-bottom: 3px;">添加背景底色</label>
+                       <div class="action-group">
+                           <div class="form-group">
+                                <select id="bg-color-select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+                                    <option value="white">白色 (White)</option>
+                                    <option value="gray">灰色 (Gray)</option>
+                                </select>
+                           </div>
+                           <button id="btn-add-background" class="btn btn-secondary btn-sm">执行</button>
+                       </div>
+                   </div>
+                   
+                   <div id="process-result" class="status-indicator hidden" style="margin-top: 10px;">
+                        <span id="process-result-text" class="status-val"></span>
+                   </div>
                 </div>
             </div>
+        </aside>
 
-            <div class="status-section">
-                <h3>📊 下载状态</h3>
-                <div class="status-item">
-                    <span class="status-label">状态</span>
-                    <span id="status" class="status-value">等待开始...</span>
+        <!-- Center: Image Viewer & Tags -->
+        <main class="main-center">
+            <div class="panel-header">
+                <span>手动编辑</span>
+            </div>
+            
+            <!-- Image Preview Section -->
+            <div class="preview-section">
+                <div class="section-header" style="justify-content: flex-start; gap: 15px;">
+                    <span>图片预览</span>
+                    <div id="editor-toolbar" class="hidden" style="display: flex; gap: 8px; align-items: center; flex: 1;">
+                        <div style="width: 1px; height: 20px; background: #ccc; margin: 0 5px;"></div>
+                        <div class="btn-group">
+                             <button class="btn btn-secondary btn-sm tool-btn active" id="tool-brush" title="画笔">画笔</button>
+                             <button class="btn btn-secondary btn-sm tool-btn" id="tool-eraser" title="橡皮">橡皮</button>
+                             <button class="btn btn-secondary btn-sm tool-btn" id="tool-eyedropper" title="吸管">吸管</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px; margin-left: 5px;">
+                            <input type="color" id="tool-color" value="#000000" title="颜色" style="height: 24px; width: 24px; padding: 0; border: none; cursor: pointer;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px; margin-left: 5px;">
+                            <span style="font-size: 12px;">Size:</span>
+                            <input type="range" id="tool-size" min="1" max="50" value="5" title="大小" style="width: 80px;">
+                            <span id="size-display" style="font-size: 12px; min-width: 25px;">5px</span>
+                        </div>
+                        <div style="width: 1px; height: 20px; background: #ccc; margin: 0 5px;"></div>
+                        <button class="btn btn-secondary btn-sm tool-btn" id="tool-undo" title="撤回 (Ctrl+Z)">撤回</button>
+                        <div style="width: 1px; height: 20px; background: #ccc; margin: 0 5px;"></div>
+                        <span id="image-resolution" style="font-size: 12px; color: #666;">- x -</span>
+                        <div style="flex-grow: 1;"></div>
+                        <button class="btn btn-primary btn-sm" id="save-image-btn" title="保存图片" style="padding: 4px 12px;">保存图片</button>
+                    </div>
                 </div>
-                <div class="status-item">
-                    <span class="status-label">已下载文件数</span>
-                    <span id="file-count" class="status-value">0</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-label">Gallery-dl 可用性</span>
-                    <span id="gallery-dl-status" class="status-value">检查中...</span>
+                <div class="image-viewer" id="image-viewer" style="padding: 0; background-color: #eef2f5; background-image: linear-gradient(45deg, #e4e7eb 25%, transparent 25%), linear-gradient(-45deg, #e4e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e4e7eb 75%), linear-gradient(-45deg, transparent 75%, #e4e7eb 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; overflow: hidden; position: relative;">
+                    <div class="empty-state" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #888;">
+                        <p>请在右侧选择图片</p>
+                    </div>
+                    
+                    <div id="editor-container" class="hidden" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        <canvas id="editor-canvas" style="background: transparent; display: block;"></canvas>
+                    </div>
                 </div>
             </div>
+            
+            <div class="tags-editor">
+                <div class="section-header">
+                    <span>标签编辑</span>
+                    <div class="btn-group">
+                        <button id="save-tags-btn" class="btn btn-primary btn-sm" disabled>保存 (Ctrl+S)</button>
+                    </div>
+                </div>
+                <textarea id="tags-content" class="tags-textarea" placeholder="选择图片以编辑标签..." disabled></textarea>
+            </div>
+        </main>
 
-            <div class="status-section">
-                <h3>🏷️ 标签后处理</h3>
-                <div class="form-group">
-                    <label for="process-folder">📁 处理文件夹</label>
-                    <input type="text" id="process-folder" placeholder="输入文件夹路径，如: dataset/tag_name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="delete-tags">🗑️ 删除标签 (用逗号分隔)</label>
-                    <input type="text" id="delete-tags" placeholder="例如: bad_quality, low_res">
-                </div>
-                
-                <div class="form-group">
-                    <label for="delete-containing">🔍 删除包含特定字符串的标签</label>
-                    <input type="text" id="delete-containing" placeholder="例如: bad, low">
-                </div>
-                
-                <div class="form-group">
-                    <label for="add-tags">➕ 添加标签 (用逗号分隔)</label>
-                    <input type="text" id="add-tags" placeholder="例如: high_quality, masterpiece">
-                </div>
-                
-                <div class="form-group">
-                    <button id="process-tags-btn" class="btn">🔄 处理标签</button>
-                    <button id="auto-standardize-btn" class="btn">⚡ 自动标准化</button>
-                    <button id="refresh-folders-btn" class="btn">🔄 自动填充路径</button>
-                </div>
-                
-                <div id="process-result" class="status-item hidden">
-                    <span class="status-label">处理结果</span>
-                    <span id="process-result-text" class="status-value"></span>
+        <!-- Right Sidebar: File Explorer -->
+        <aside class="sidebar-right panel">
+            <div class="panel-header">
+                <span>文件列表</span>
+                <button id="refresh-tree-btn" class="btn btn-secondary btn-sm" style="width: auto; padding: 4px 8px;">🔄</button>
+            </div>
+            <div class="panel-content" style="padding: 0;">
+                <div id="file-tree" class="file-tree">
+                    <div style="padding: 20px; text-align: center; color: #999;">加载中...</div>
                 </div>
             </div>
-        </div>
-
-        <div class="footer">
-            <p><a href="https://github.com/Noyze-AI" target="_blank">FastDanbooruDataset -by Noyze</a></p>
-            <p><a href="https://github.com/mikf/gallery-dl" target="_blank">Based on gallery-dl</a></p>
-        </div>
+        </aside>
     </div>
 
+    <div id="toast" class="toast">消息提示</div>
+
     <script>
+        // State
+        let currentImagePath = null;
         let isDownloading = false;
-        let statusInterval;
+        let statusInterval = null;
 
-        // DOM 元素
-        const tagInput = document.getElementById('tag');
-        const downloadDirInput = document.getElementById('download_dir');
-        const maxCountInput = document.getElementById('max_count');
-        const startBtn = document.getElementById('start-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const statusElement = document.getElementById('status');
-        const fileCountElement = document.getElementById('file-count');
-        const galleryDlStatusElement = document.getElementById('gallery-dl-status');
+        // Elements
+        const el = {
+            tag: document.getElementById('tag'),
+            // downloadDir: document.getElementById('download_dir'), // Removed
+            maxCount: document.getElementById('max_count'),
+            startBtn: document.getElementById('start-btn'),
+            cancelBtn: document.getElementById('cancel-btn'),
+            status: document.getElementById('status'),
+            
+            processFolder: document.getElementById('process-folder'),
+            
+            renameFilesBtn: document.getElementById('rename-files-btn'),
+            autoStandardizeBtn: document.getElementById('auto-standardize-btn'),
+            
+            deleteTags: document.getElementById('delete-tags'),
+            btnDeleteTags: document.getElementById('btn-delete-tags'),
+            
+            deleteContaining: document.getElementById('delete-containing'),
+            btnDeleteContaining: document.getElementById('btn-delete-containing'),
+            
+            addTags: document.getElementById('add-tags'),
+            btnAddTags: document.getElementById('btn-add-tags'),
+            
+            resizeMaxEdge: document.getElementById('resize-max-edge'),
+            btnResizeImages: document.getElementById('btn-resize-images'),
+            bgColorSelect: document.getElementById('bg-color-select'),
+            btnAddBackground: document.getElementById('btn-add-background'),
+            
+            refreshFoldersBtn: document.getElementById('refresh-folders-btn'),
+            processResult: document.getElementById('process-result'),
+            processResultText: document.getElementById('process-result-text'),
+            
+            imageViewer: document.getElementById('image-viewer'),
+            editorContainer: document.getElementById('editor-container'),
+            editorToolbar: document.getElementById('editor-toolbar'),
+            canvas: document.getElementById('editor-canvas'),
+            toolBrush: document.getElementById('tool-brush'),
+            toolEraser: document.getElementById('tool-eraser'),
+            toolEyedropper: document.getElementById('tool-eyedropper'),
+            toolUndo: document.getElementById('tool-undo'),
+            toolColor: document.getElementById('tool-color'),
+            toolSize: document.getElementById('tool-size'),
+            sizeDisplay: document.getElementById('size-display'),
+            saveImageBtn: document.getElementById('save-image-btn'),
+            imageResolution: document.getElementById('image-resolution'),
+            
+            tagsContent: document.getElementById('tags-content'),
+            saveTagsBtn: document.getElementById('save-tags-btn'),
+            fileTree: document.getElementById('file-tree'),
+            refreshTreeBtn: document.getElementById('refresh-tree-btn'),
+            toast: document.getElementById('toast')
+        };
 
-        // 开始下载
-        startBtn.addEventListener('click', async () => {
-            const tag = tagInput.value.trim();
-            const downloadDir = downloadDirInput.value.trim();
-            const maxCount = parseInt(maxCountInput.value) || 50;
+        // --- Toast Notification ---
+        function showToast(message, type = 'info') {
+            el.toast.textContent = message;
+            el.toast.className = `toast show ${type}`;
+            setTimeout(() => {
+                el.toast.className = 'toast';
+            }, 3000);
+        }
 
-            if (!tag) {
-                alert('请输入标签');
-                return;
-            }
-
-            if (!downloadDir) {
-                alert('请输入下载目录');
-                return;
-            }
-
-            if (maxCount < 1 || maxCount > 1000) {
-                alert('最大下载数量必须在1-1000之间');
-                return;
-            }
-
+        // --- File Tree Logic ---
+        async function loadFileTree() {
             try {
-                const response = await fetch('/api/download', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        tag: tag,
-                        download_dir: downloadDir,
-                        max_count: maxCount
-                    })
+                const response = await fetch('/api/dataset_structure');
+                const data = await response.json();
+                renderFileTree(data);
+            } catch (error) {
+                console.error('Failed to load file tree:', error);
+                el.fileTree.innerHTML = '<div style="padding:15px;color:red;">加载失败</div>';
+            }
+        }
+
+        function renderFileTree(data) {
+            el.fileTree.innerHTML = '';
+            if (data.length === 0) {
+                el.fileTree.innerHTML = '<div style="padding:15px;color:#999;text-align:center;">暂无文件</div>';
+                return;
+            }
+            
+            const rootUl = document.createElement('div');
+            data.forEach(item => {
+                rootUl.appendChild(createTreeItem(item));
+            });
+            el.fileTree.appendChild(rootUl);
+        }
+
+        function createTreeItem(item) {
+            const container = document.createElement('div');
+            
+            const row = document.createElement('div');
+            row.className = 'tree-item';
+            row.title = item.name;
+            
+            const icon = document.createElement('span');
+            icon.className = 'tree-item-icon';
+            
+            const toggle = document.createElement('span');
+            toggle.className = 'folder-toggle';
+            
+            if (item.type === 'directory') {
+                toggle.textContent = '▶';
+                icon.innerHTML = '<span style="color:#4a90e2; font-size:1.2em;">■</span>';
+            } else {
+                toggle.textContent = '';
+                icon.innerHTML = '<span style="color:#ff9a9e; font-size:1.2em;">□</span>';
+            }
+            
+            row.appendChild(toggle);
+            row.appendChild(icon);
+            row.appendChild(document.createTextNode(item.name));
+            
+            container.appendChild(row);
+            
+            if (item.type === 'directory' && item.children) {
+                const childrenContainer = document.createElement('div');
+                childrenContainer.className = 'tree-children';
+                
+                item.children.forEach(child => {
+                    childrenContainer.appendChild(createTreeItem(child));
                 });
+                
+                container.appendChild(childrenContainer);
+                
+                // Toggle Event
+                row.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = childrenContainer.classList.contains('open');
+                    if (isOpen) {
+                        childrenContainer.classList.remove('open');
+                        toggle.classList.remove('expanded');
+                    } else {
+                        childrenContainer.classList.add('open');
+                        toggle.classList.add('expanded');
+                    }
+                    
+                    // Also populate process folder input if it's a directory
+                    el.processFolder.value = item.path.replace(/\\/g, '/');
+                });
+            } else {
+                // File Event
+                row.addEventListener('click', () => {
+                    // Remove active class from all
+                    document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('active'));
+                    row.classList.add('active');
+                    openImage(item.path);
+                });
+            }
+            
+            return container;
+        }
 
-                const result = await response.json();
+        el.refreshTreeBtn.addEventListener('click', loadFileTree);
 
-                if (result.success) {
-                    isDownloading = true;
-                    startBtn.classList.add('hidden');
-                    cancelBtn.classList.remove('hidden');
-                    startStatusPolling();
+        // --- Image Editor Logic ---
+        const editor = {
+            ctx: null,
+            isDrawing: false,
+            currentTool: 'brush', // brush, eraser, eyedropper
+            lastX: 0,
+            lastY: 0,
+            scale: 1, // Current scale factor
+            originalWidth: 0,
+            originalHeight: 0,
+            history: [],
+            historyStep: -1,
+            
+            init() {
+                if (!el.canvas) return;
+                this.ctx = el.canvas.getContext('2d');
+                
+                // Event Listeners
+                el.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+                el.canvas.addEventListener('mousemove', (e) => this.draw(e));
+                el.canvas.addEventListener('mouseup', () => this.stopDrawing());
+                el.canvas.addEventListener('mouseout', () => this.stopDrawing());
+                
+                // Resize Observer to handle window resize
+                const resizeObserver = new ResizeObserver(() => {
+                    if (currentImagePath) {
+                        this.fitToContainer();
+                    }
+                });
+                resizeObserver.observe(el.imageViewer);
+                
+                // Tools
+                el.toolBrush.addEventListener('click', () => this.setTool('brush'));
+                el.toolEraser.addEventListener('click', () => this.setTool('eraser'));
+                el.toolEyedropper.addEventListener('click', () => this.setTool('eyedropper'));
+                el.toolUndo.addEventListener('click', () => this.undo());
+                
+                // Keyboard Shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                        e.preventDefault();
+                        this.undo();
+                    }
+                });
+                
+                // Settings
+                el.toolSize.addEventListener('input', (e) => {
+                    el.sizeDisplay.textContent = e.target.value + 'px';
+                });
+                
+                // Save Image
+                el.saveImageBtn.addEventListener('click', () => this.saveImage());
+            },
+            
+            saveHistory() {
+                this.historyStep++;
+                if (this.historyStep < this.history.length) {
+                    this.history.length = this.historyStep;
+                }
+                this.history.push(el.canvas.toDataURL());
+            },
+            
+            undo() {
+                if (this.historyStep > 0) {
+                    this.historyStep--;
+                    const canvasPic = new Image();
+                    canvasPic.src = this.history[this.historyStep];
+                    canvasPic.onload = () => {
+                        this.ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+                        this.ctx.drawImage(canvasPic, 0, 0);
+                    }
+                }
+            },
+            
+            setTool(tool) {
+                this.currentTool = tool;
+                
+                // Update UI
+                el.toolBrush.classList.remove('active');
+                el.toolEraser.classList.remove('active');
+                el.toolEyedropper.classList.remove('active');
+                el.canvas.style.cursor = 'crosshair';
+                
+                if (tool === 'brush') el.toolBrush.classList.add('active');
+                else if (tool === 'eraser') {
+                    el.toolEraser.classList.add('active');
+                }
+                else if (tool === 'eyedropper') {
+                    el.toolEyedropper.classList.add('active');
+                    el.canvas.style.cursor = 'copy';
+                }
+            },
+            
+            getMousePos(e) {
+                const rect = el.canvas.getBoundingClientRect();
+                return {
+                    x: (e.clientX - rect.left) / this.scale,
+                    y: (e.clientY - rect.top) / this.scale
+                };
+            },
+            
+            startDrawing(e) {
+                if (this.currentTool === 'eyedropper') {
+                    this.pickColor(e);
+                    return;
+                }
+                
+                this.isDrawing = true;
+                const pos = this.getMousePos(e);
+                this.lastX = pos.x;
+                this.lastY = pos.y;
+                
+                this.draw(e);
+            },
+            
+            draw(e) {
+                if (!this.isDrawing) return;
+                if (this.currentTool === 'eyedropper') return;
+                
+                const pos = this.getMousePos(e);
+                const ctx = this.ctx;
+                
+                ctx.beginPath();
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.lineWidth = el.toolSize.value; // Scale line width? Maybe not needed if we draw on original resolution
+                
+                if (this.currentTool === 'eraser') {
+                    ctx.globalCompositeOperation = 'destination-out';
                 } else {
-                    alert(result.message);
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.strokeStyle = el.toolColor.value;
+                }
+                
+                ctx.moveTo(this.lastX, this.lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                
+                this.lastX = pos.x;
+                this.lastY = pos.y;
+            },
+            
+            stopDrawing() {
+                if (this.isDrawing) {
+                    this.isDrawing = false;
+                    this.ctx.beginPath();
+                    this.saveHistory();
+                }
+            },
+            
+            pickColor(e) {
+                const pos = this.getMousePos(e);
+                // Ensure coordinates are integers
+                const x = Math.floor(pos.x);
+                const y = Math.floor(pos.y);
+                
+                const pixel = this.ctx.getImageData(x, y, 1, 1).data;
+                const r = pixel[0].toString(16).padStart(2, '0');
+                const g = pixel[1].toString(16).padStart(2, '0');
+                const b = pixel[2].toString(16).padStart(2, '0');
+                const hex = `#${r}${g}${b}`;
+                
+                el.toolColor.value = hex;
+                this.setTool('brush');
+            },
+            
+            loadImage(src) {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = () => {
+                    this.originalWidth = img.width;
+                    this.originalHeight = img.height;
+                    
+                    // Set canvas actual resolution to match image
+                    el.canvas.width = img.width;
+                    el.canvas.height = img.height;
+                    
+                    // Update resolution display
+                    if (el.imageResolution) {
+                        el.imageResolution.textContent = `${img.width} x ${img.height}`;
+                    }
+                    
+                    this.ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+                    this.ctx.drawImage(img, 0, 0);
+                    
+                    this.fitToContainer();
+                    
+                    // Reset History
+                    this.history = [];
+                    this.historyStep = -1;
+                    this.saveHistory();
+                };
+                img.onerror = () => {
+                     showToast('无法加载图片', 'error');
+                };
+                img.src = src;
+            },
+            
+            fitToContainer() {
+                if (!this.originalWidth || !this.originalHeight) return;
+                
+                const containerWidth = el.imageViewer.clientWidth;
+                const containerHeight = el.imageViewer.clientHeight;
+                
+                // Calculate scale to fit
+                const scaleX = containerWidth / this.originalWidth;
+                const scaleY = containerHeight / this.originalHeight;
+                this.scale = Math.min(scaleX, scaleY); // Fit entirely
+                
+                // Apply visual scaling using CSS
+                const displayWidth = this.originalWidth * this.scale;
+                const displayHeight = this.originalHeight * this.scale;
+                
+                el.canvas.style.width = `${displayWidth}px`;
+                el.canvas.style.height = `${displayHeight}px`;
+            },
+            
+            async saveImage() {
+                if (!currentImagePath) return;
+                
+                try {
+                    el.saveImageBtn.disabled = true;
+                    el.saveImageBtn.innerHTML = '💾 保存中...';
+                    
+                    const dataURL = el.canvas.toDataURL('image/png');
+                    
+                    const response = await fetch('/api/save_image', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            image_path: currentImagePath,
+                            image_data: dataURL
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showToast('图片已保存', 'success');
+                    } else {
+                        showToast('保存失败: ' + result.message, 'error');
+                    }
+                } catch (error) {
+                    showToast('请求失败: ' + error.message, 'error');
+                } finally {
+                    el.saveImageBtn.disabled = false;
+                    el.saveImageBtn.innerHTML = '保存图片';
+                }
+            }
+        };
+        
+        editor.init();
+
+        // --- Image & Tag Logic ---
+        async function openImage(path) {
+            currentImagePath = path;
+            
+            let servePath = path;
+            if (path.startsWith('dataset/')) {
+                servePath = path.substring(8); // "dataset/".length is 8
+            }
+            
+            // Show editor
+            document.querySelector('.empty-state').classList.add('hidden');
+            el.editorContainer.classList.remove('hidden');
+            el.editorToolbar.classList.remove('hidden');
+            el.editorToolbar.style.display = 'flex'; // Ensure flex display
+            
+            // Load Image
+            editor.loadImage(`/dataset/${servePath}`);
+            
+            // Load Tags
+            el.tagsContent.value = '加载中...';
+            el.tagsContent.disabled = true;
+            el.saveTagsBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/get_image_tags', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ image_path: path })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    el.tagsContent.value = result.tags;
+                    el.tagsContent.disabled = false;
+                    el.saveTagsBtn.disabled = false;
+                } else {
+                    el.tagsContent.value = '无法加载标签: ' + result.message;
                 }
             } catch (error) {
-                alert('请求失败: ' + error.message);
+                el.tagsContent.value = '加载出错: ' + error.message;
+            }
+        }
+
+        async function saveTags() {
+            if (!currentImagePath) return;
+            
+            const content = el.tagsContent.value;
+            el.saveTagsBtn.disabled = true;
+            el.saveTagsBtn.textContent = '保存中...';
+            
+            try {
+                const response = await fetch('/api/save_image_tags', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        image_path: currentImagePath,
+                        tags: content
+                    })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('标签已保存', 'success');
+                } else {
+                    showToast('保存失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showToast('请求失败: ' + error.message, 'error');
+            } finally {
+                el.saveTagsBtn.disabled = false;
+                el.saveTagsBtn.textContent = '保存 (Ctrl+S)';
+            }
+        }
+
+        el.saveTagsBtn.addEventListener('click', saveTags);
+        
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (!el.saveTagsBtn.disabled) {
+                    saveTags();
+                }
             }
         });
 
-        // 取消下载
-        cancelBtn.addEventListener('click', async () => {
+        // --- Download Logic ---
+        el.startBtn.addEventListener('click', async () => {
+            const tag = el.tag.value.trim();
+            const downloadDir = 'dataset'; // Hardcoded
+            const maxCount = parseInt(el.maxCount.value) || 50;
+
+            if (!tag) return showToast('请输入标签', 'error');
+            // if (!downloadDir) return showToast('请输入下载目录', 'error');
+
             try {
-                const response = await fetch('/api/cancel', {
-                    method: 'POST'
+                el.startBtn.classList.add('running'); // Add running class
+                const response = await fetch('/api/download', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ tag, download_dir: downloadDir, max_count: maxCount })
                 });
 
                 const result = await response.json();
-                alert(result.message);
+                if (result.success) {
+                    isDownloading = true;
+                    updateUIState(true);
+                    startStatusPolling();
+                    showToast('开始下载...', 'info');
+                } else {
+                    showToast(result.message, 'error');
+                    el.startBtn.classList.remove('running');
+                }
+            } catch (error) {
+                showToast('请求失败: ' + error.message, 'error');
+                el.startBtn.classList.remove('running');
+            }
+        });
 
+        el.cancelBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/cancel', { method: 'POST' });
+                const result = await response.json();
+                showToast(result.message, result.success ? 'success' : 'error');
+                
                 if (result.success) {
                     isDownloading = false;
-                    startBtn.classList.remove('hidden');
-                    cancelBtn.classList.add('hidden');
+                    updateUIState(false);
                     stopStatusPolling();
                 }
             } catch (error) {
-                alert('取消失败: ' + error.message);
+                showToast('取消失败: ' + error.message, 'error');
             }
         });
 
-        // 开始状态轮询
+        function updateUIState(downloading) {
+            if (downloading) {
+                el.startBtn.classList.add('hidden');
+                el.cancelBtn.classList.remove('hidden');
+                el.status.classList.add('text-blue');
+            } else {
+                el.startBtn.classList.remove('hidden');
+                el.cancelBtn.classList.add('hidden');
+                el.status.classList.remove('text-blue');
+                el.startBtn.classList.remove('running'); // Remove running when done
+            }
+        }
+
         function startStatusPolling() {
             statusInterval = setInterval(updateStatus, 1000);
         }
 
-        // 停止状态轮询
         function stopStatusPolling() {
             if (statusInterval) {
                 clearInterval(statusInterval);
@@ -372,194 +1207,222 @@
             }
         }
 
-        // 更新状态
         async function updateStatus() {
             try {
                 const response = await fetch('/api/status');
                 const status = await response.json();
 
-                // 更新状态显示
-                statusElement.textContent = status.status || '未知状态';
-                fileCountElement.textContent = status.file_count || 0;
-                galleryDlStatusElement.textContent = status.gallery_dl_available ? '✅ 可用' : '❌ 不可用';
+                el.status.textContent = status.status || '未知';
 
-                // 更新状态样式
-                statusElement.className = 'status-value';
-                if (status.is_downloading) {
-                    statusElement.classList.add('downloading');
-                } else if (status.status && status.status.includes('完成')) {
-                    statusElement.classList.add('completed');
-                    isDownloading = false;
-                    startBtn.classList.remove('hidden');
-                    cancelBtn.classList.add('hidden');
-                    stopStatusPolling();
-                } else if (status.status && (status.status.includes('错误') || status.status.includes('失败'))) {
-                    statusElement.classList.add('error');
-                    isDownloading = false;
-                    startBtn.classList.remove('hidden');
-                    cancelBtn.classList.add('hidden');
-                    stopStatusPolling();
-                }
-
-                // 如果下载已停止，停止轮询
                 if (!status.is_downloading && isDownloading) {
                     isDownloading = false;
-                    startBtn.classList.remove('hidden');
-                    cancelBtn.classList.add('hidden');
+                    updateUIState(false);
                     stopStatusPolling();
+                    showToast('下载任务结束', 'success');
+                    loadFileTree(); // Refresh tree after download
                 }
             } catch (error) {
-                console.error('获取状态失败:', error);
+                console.error('Status check failed', error);
             }
         }
 
-        // 页面加载时获取初始状态
-        updateStatus();
-        
-        // 监听标签和下载目录变化，自动设置处理文件夹
-        tagInput.addEventListener('input', setDefaultFolder);
-        downloadDirInput.addEventListener('input', setDefaultFolder);
-
-        // 标签处理相关元素
-        const processFolderInput = document.getElementById('process-folder');
-        const deleteTagsInput = document.getElementById('delete-tags');
-        const deleteContainingInput = document.getElementById('delete-containing');
-        const addTagsInput = document.getElementById('add-tags');
-        const processTagsBtn = document.getElementById('process-tags-btn');
-        const autoStandardizeBtn = document.getElementById('auto-standardize-btn');
-        const refreshFoldersBtn = document.getElementById('refresh-folders-btn');
-        const processResult = document.getElementById('process-result');
-        const processResultText = document.getElementById('process-result-text');
-
-        // 设置默认文件夹路径
-        function setDefaultFolder() {
-            const downloadDir = downloadDirInput.value.trim() || 'dataset';
-            const tag = tagInput.value.trim();
+        // --- Post Process Logic ---
+        el.refreshFoldersBtn.addEventListener('click', () => {
+            const downloadDir = 'dataset'; // Hardcoded
+            const tag = el.tag.value.trim();
             if (tag) {
-                processFolderInput.value = `${downloadDir}/${tag}`;
-            }
-        }
-
-        // 刷新文件夹路径
-        refreshFoldersBtn.addEventListener('click', setDefaultFolder);
-
-        // 处理标签
-        processTagsBtn.addEventListener('click', async () => {
-            const folder = processFolderInput.value.trim();
-            const deleteTags = deleteTagsInput.value.trim();
-            const deleteContaining = deleteContainingInput.value.trim();
-            const addTags = addTagsInput.value.trim();
-
-            if (!folder) {
-                alert('请选择要处理的文件夹');
-                return;
-            }
-
-            if (!deleteTags && !deleteContaining && !addTags) {
-                alert('请至少指定一种处理操作');
-                return;
-            }
-
-            // 构建处理参数
-            const processData = {
-                folder_path: folder
-            };
-
-            if (deleteTags) {
-                processData.remove_tags = deleteTags.split(',').map(tag => tag.trim()).filter(tag => tag);
-            }
-
-            if (deleteContaining) {
-                processData.remove_containing = deleteContaining.split(',').map(str => str.trim()).filter(str => str);
-            }
-
-            if (addTags) {
-                processData.add_tags = addTags.split(',').map(tag => tag.trim()).filter(tag => tag);
-            }
-
-            try {
-                processTagsBtn.disabled = true;
-                processTagsBtn.textContent = '处理中...';
-                
-                const response = await fetch('/api/manual_tag_process', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(processData)
-                });
-
-                const result = await response.json();
-                
-                // 显示处理结果
-                processResult.classList.remove('hidden');
-                if (result.success) {
-                    processResultText.textContent = `处理完成: ${result.message}`;
-                    processResultText.className = 'status-value completed';
-                    
-                    // 清空输入框
-                    deleteTagsInput.value = '';
-                    deleteContainingInput.value = '';
-                    addTagsInput.value = '';
-                } else {
-                    processResultText.textContent = `处理失败: ${result.message}`;
-                    processResultText.className = 'status-value error';
-                }
-            } catch (error) {
-                processResult.classList.remove('hidden');
-                processResultText.textContent = `请求失败: ${error.message}`;
-                processResultText.className = 'status-value error';
-            } finally {
-                processTagsBtn.disabled = false;
-                processTagsBtn.textContent = '🔄 处理标签';
+                el.processFolder.value = `${downloadDir}/${tag}`;
             }
         });
 
-        // 自动标准化标签
-        autoStandardizeBtn.addEventListener('click', async () => {
-            const folder = processFolderInput.value.trim();
-
-            if (!folder) {
-                alert('请选择要处理的文件夹');
-                return;
-            }
+        // 1. Rename Files
+        el.renameFilesBtn.addEventListener('click', async () => {
+            const folder = el.processFolder.value.trim();
+            if (!folder) return showToast('请选择处理文件夹', 'error');
 
             try {
-                autoStandardizeBtn.disabled = true;
-                autoStandardizeBtn.textContent = '标准化中...';
+                el.renameFilesBtn.disabled = true;
+                el.renameFilesBtn.classList.add('running');
+                const response = await fetch('/api/rename_files', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ folder_path: folder })
+                });
+                const result = await response.json();
                 
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    loadFileTree(); 
+                } else {
+                    showToast('重命名失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showToast('请求失败: ' + error.message, 'error');
+            } finally {
+                el.renameFilesBtn.disabled = false;
+                el.renameFilesBtn.classList.remove('running');
+            }
+        });
+
+        // 2. Auto Standardize
+        el.autoStandardizeBtn.addEventListener('click', async () => {
+            const folder = el.processFolder.value.trim();
+            if (!folder) return showToast('请选择处理文件夹', 'error');
+
+            try {
+                el.autoStandardizeBtn.disabled = true;
+                el.autoStandardizeBtn.classList.add('running');
                 const response = await fetch('/api/auto_standardize', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        folder_path: folder
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ folder_path: folder })
                 });
-
                 const result = await response.json();
                 
-                // 显示处理结果
-                processResult.classList.remove('hidden');
                 if (result.success) {
-                    processResultText.textContent = `自动标准化完成: ${result.message}`;
-                    processResultText.className = 'status-value completed';
+                    showToast(result.message, 'success');
+                    loadFileTree();
                 } else {
-                    processResultText.textContent = `自动标准化失败: ${result.message}`;
-                    processResultText.className = 'status-value error';
+                    showToast('标准化失败: ' + result.message, 'error');
                 }
             } catch (error) {
-                processResult.classList.remove('hidden');
-                processResultText.textContent = `请求失败: ${error.message}`;
-                processResultText.className = 'status-value error';
+                showToast('请求失败: ' + error.message, 'error');
             } finally {
-                autoStandardizeBtn.disabled = false;
-                autoStandardizeBtn.textContent = '⚡ 自动标准化';
+                el.autoStandardizeBtn.disabled = false;
+                el.autoStandardizeBtn.classList.remove('running');
             }
         });
+        
+        // Helper for Tag Processing
+        async function processTags(data, btn) {
+            const folder = el.processFolder.value.trim();
+            if (!folder) return showToast('请选择处理文件夹', 'error');
+            
+            data.folder_path = folder;
+            
+            try {
+                btn.disabled = true;
+                btn.classList.add('running'); // Add running class for blue bg
+                const response = await fetch('/api/manual_tag_process', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                el.processResult.classList.remove('hidden');
+                el.processResultText.textContent = result.message;
+                el.processResultText.className = result.success ? 'status-val text-green' : 'status-val text-red';
+                
+                if (result.success) {
+                    showToast('操作完成', 'success');
+                    if (currentImagePath && currentImagePath.includes(folder)) {
+                        openImage(currentImagePath);
+                    }
+                }
+            } catch (error) {
+                showToast('处理失败: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('running'); // Remove running class
+            }
+        }
 
-        // 目录输入功能 - 允许用户直接输入
+        // 3. Delete Specific Tags
+        el.btnDeleteTags.addEventListener('click', () => {
+            const tags = el.deleteTags.value.trim();
+            if (!tags) return showToast('请填写要删除的标签', 'error');
+            processTags({ remove_tags: tags.split(',') }, el.btnDeleteTags);
+        });
+        
+        // 4. Delete Fuzzy Tags
+        el.btnDeleteContaining.addEventListener('click', () => {
+            const content = el.deleteContaining.value.trim();
+            if (!content) return showToast('请填写要删除的内容', 'error');
+            processTags({ remove_containing: content.split(',') }, el.btnDeleteContaining);
+        });
+
+        // 5. Add Tags
+        el.btnAddTags.addEventListener('click', () => {
+            const tags = el.addTags.value.trim();
+            if (!tags) return showToast('请填写要添加的标签', 'error');
+            processTags({ add_tags: tags.split(',') }, el.btnAddTags);
+        });
+
+        // 6. Batch Resize
+        el.btnResizeImages.addEventListener('click', () => {
+             const maxEdge = el.resizeMaxEdge.value;
+             if (!maxEdge) {
+                 showToast('请输入最大边数值', 'error');
+                 return;
+             }
+             batchProcessImages('resize', { max_edge: maxEdge }, el.btnResizeImages);
+        });
+        
+        // 7. Batch Add Background
+        el.btnAddBackground.addEventListener('click', () => {
+             const color = el.bgColorSelect.value;
+             batchProcessImages('add_background', { color: color }, el.btnAddBackground);
+        });
+        
+        async function batchProcessImages(action, params, btn) {
+             const folder = el.processFolder.value.trim();
+             if (!folder) return showToast('请先选择目标文件夹', 'error');
+             
+             if (btn) {
+                 btn.disabled = true;
+                 btn.classList.add('running');
+             }
+             
+             el.processResult.classList.remove('hidden');
+             el.processResultText.textContent = '处理中...';
+             el.processResultText.className = 'status-val';
+             
+             try {
+                 const response = await fetch('/api/batch_process_images', {
+                     method: 'POST',
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify({
+                         folder_path: folder,
+                         action: action,
+                         params: params
+                     })
+                 });
+                 
+                 const result = await response.json();
+                 
+                 el.processResultText.textContent = result.message;
+                 el.processResultText.className = result.success ? 'status-val text-green' : 'status-val text-red';
+                 
+                 if (result.success) {
+                     showToast(result.message, 'success');
+                     // If current image is in the folder, reload it
+                     if (currentImagePath && currentImagePath.includes(folder)) {
+                         let servePath = currentImagePath;
+                         if (currentImagePath.startsWith('dataset/')) {
+                             servePath = currentImagePath.substring(8);
+                         }
+                         // Force reload image
+                         editor.loadImage(`/dataset/${servePath}?t=${Date.now()}`);
+                     }
+                 } else {
+                     showToast('操作失败: ' + result.message, 'error');
+                 }
+             } catch (e) {
+                 el.processResultText.textContent = '请求失败: ' + e.message;
+                 el.processResultText.className = 'status-val text-red';
+                 showToast('请求失败', 'error');
+             } finally {
+                 if (btn) {
+                     btn.disabled = false;
+                     btn.classList.remove('running');
+                 }
+             }
+        }
+
+        // Initialize
+        updateStatus();
+        loadFileTree();
     </script>
 </body>
 </html>

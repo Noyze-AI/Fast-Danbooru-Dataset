@@ -1,5 +1,7 @@
 # Fast-Danbooru-Dataset-DL
 
+![Fast-Danbooru-Dataset-DL](README.png)
+
 一个轻量级的 Web 工具，用于从 Danbooru 下载图像数据集并进行后处理，专为 AI 模型训练（如 LoRA/Stable Diffusion）的数据准备工作而设计。它提供了一个直观的用户界面，集成了下载、自动打标、批量编辑和图像清理等功能。
 
 ## 主要功能
